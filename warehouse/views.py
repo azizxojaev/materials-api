@@ -25,7 +25,4 @@ class ProductsApiView(APIView):
                     p['warehouse_id'] = None
                     p['price'] = None
 
-
-        print(warehouses)
-
         return Response({'result': serializer.data})
