@@ -12,4 +12,20 @@ class ProductsApiView(APIView):
 
         serializer = ProductsSerializer(instance=products_obj, many=True)
 
+        warehouses = {}
+        for i in serializer.data:
+            for p in i['product_materials']:
+                if warehouses.get(f"{p['warehouse_id']}") == None:
+                    warehouses[f"{p['warehouse_id']}"] = p['qty']
+                else:
+                    warehouses[f"{p['warehouse_id']}"] += p['qty']
+                remainder = Warehouse.objects.get(id=p['warehouse_id']).remainder
+                qty = warehouses[f"{p['warehouse_id']}"]
+                if qty > remainder:
+                    p['warehouse_id'] = None
+                    p['price'] = None
+
+
+        print(warehouses)
+
         return Response({'result': serializer.data})

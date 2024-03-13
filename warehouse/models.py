@@ -26,9 +26,9 @@ class ProductMaterial(models.Model):
     
 
 class Warehouse(models.Model):
-    material = models.ForeignKey(Material, on_delete=models.CASCADE, db_index=True)
+    material = models.ForeignKey(Material, on_delete=models.CASCADE, db_index=True, unique=True)
     remainder = models.PositiveIntegerField()
     price = models.PositiveIntegerField()
 
     def __str__(self):
-        return f'{self.material.material_name}'
+        return f'{self.material.material_name} - {self.id}'

@@ -3,6 +3,7 @@ from .models import *
 
 
 class ProductsMaterialSerializer(ModelSerializer):
+    used_material = {}
     
     class Meta:
         model = ProductMaterial
@@ -10,14 +11,17 @@ class ProductsMaterialSerializer(ModelSerializer):
 
     def to_representation(self, instance):
         redata = super().to_representation(instance)
+
+        warehouse = Warehouse.objects.get(material__id=redata['material'])
+        redata['warehouse_id'] = warehouse.id
         redata['material_name'] = Material.objects.get(id=redata['material']).material_name
         redata['qty'] = redata['quantity']
-        # redata['price'] = 
-        # redata['warehouse_id'] = Warehouse.objects.get(material__id=redata['material'])
+        redata['price'] = warehouse.price
         redata.pop('id')
         redata.pop('quantity')
         redata.pop('material')
         redata.pop('product')
+
         return redata
 
 
